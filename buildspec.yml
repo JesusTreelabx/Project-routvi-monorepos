@@ -5,27 +5,27 @@ phases:
     runtime-versions:
       nodejs: 18
     commands:
-      - echo "Instalando dependencias en la raíz..."
+      - echo "Instalando dependencias..."
       - npm install
   build:
     commands:
-      - echo "Iniciando construcción de las 4 aplicaciones..."
+      - echo "Compilando aplicaciones..."
       - |
         for app in admin client partner web; do
-          echo "---------------------------------------"
-          echo "Compilando: $app"
           cd apps/$app
           npm install
-          # El flag --base es el que arregla la pantalla en blanco
           npx vite build --base=/$app/
           cd ../..
         done
   post_build:
     commands:
-      - echo "Desplegando archivos a S3..."
+      - echo "Sincronizando con S3 directamente..."
       - |
         for app in admin client partner web; do
-          echo "Sincronizando $app con S3 bucket..."
           aws s3 sync apps/$app/dist s3://project-r-monorepos-bucket/$app --delete
         done
-      - echo "¡Despliegue completado con éxito!"
+
+artifacts:
+  files:
+    - '**/*'
+  base-directory: '.'
