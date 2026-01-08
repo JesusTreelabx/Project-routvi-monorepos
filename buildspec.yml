@@ -13,26 +13,26 @@ phases:
       - |
         for app in admin client partner web; do
           echo "---------------------------------------"
-          echo "Construyendo aplicación: $app"
+          echo "Compilando: $app"
           cd apps/$app
           npm install
-          # Vite compila y genera la carpeta 'dist'
+          # Vite genera la carpeta 'dist' con los archivos finales
           npx vite build --base=/$app/
           cd ../..
         done
   post_build:
     commands:
-      - echo "Desplegando contenidos de 'dist' a sus carpetas en S3..."
+      - echo "Sincronizando carpetas dist con S3..."
       - |
         for app in admin client partner web; do
-          echo "Sincronizando archivos de $app..."
-          # Este comando toma lo que hay DENTRO de apps/nombre/dist 
-          # y lo pone DENTRO de s3://nombre-bucket/nombre/
+          echo "Actualizando archivos en /$app..."
+          # Este comando es el que realmente actualiza tu S3 de forma limpia
           aws s3 sync apps/$app/dist s3://project-r-monorepos-bucket/$app --delete
         done
-      - echo "¡Despliegue finalizado con éxito!"
+      - echo "¡Despliegue completado!"
 
-# Mantener artifacts para que la etapa 'Deploy' de la Pipeline no falle
+# AQUÍ ESTÁ EL TRUCO:
+# Dejamos 'files' vacío para que la etapa Deploy de CodePipeline no tenga 
+# nada que subir y así no te cree la carpeta raíz duplicada en el bucket.
 artifacts:
-  files:
-    - '**/*'
+  files: []
