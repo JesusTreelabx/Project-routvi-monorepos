@@ -5,27 +5,34 @@ phases:
     runtime-versions:
       nodejs: 18
     commands:
-      - echo "Instalando dependencias..."
+      - echo "Instalando dependencias globales..."
       - npm install
   build:
     commands:
-      - echo "Compilando aplicaciones..."
+      - echo "Iniciando construcción de los 4 frontends..."
       - |
         for app in admin client partner web; do
+          echo "---------------------------------------"
+          echo "Construyendo aplicación: $app"
           cd apps/$app
           npm install
+          # Vite compila y genera la carpeta 'dist'
           npx vite build --base=/$app/
           cd ../..
         done
   post_build:
     commands:
-      - echo "Sincronizando con S3 directamente..."
+      - echo "Desplegando contenidos de 'dist' a sus carpetas en S3..."
       - |
         for app in admin client partner web; do
+          echo "Sincronizando archivos de $app..."
+          # Este comando toma lo que hay DENTRO de apps/nombre/dist 
+          # y lo pone DENTRO de s3://nombre-bucket/nombre/
           aws s3 sync apps/$app/dist s3://project-r-monorepos-bucket/$app --delete
         done
+      - echo "¡Despliegue finalizado con éxito!"
 
+# Mantener artifacts para que la etapa 'Deploy' de la Pipeline no falle
 artifacts:
   files:
     - '**/*'
-  base-directory: '.'
