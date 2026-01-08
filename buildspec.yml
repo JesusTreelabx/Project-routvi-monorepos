@@ -1,38 +1,21 @@
 version: 0.2
-
 phases:
   install:
     runtime-versions:
       nodejs: 18
     commands:
-      - echo "Instalando dependencias globales..."
       - npm install
   build:
     commands:
-      - echo "Iniciando construcción de los 4 frontends..."
       - |
         for app in admin client partner web; do
-          echo "---------------------------------------"
-          echo "Compilando: $app"
-          cd apps/$app
-          npm install
-          # Vite genera la carpeta 'dist' con los archivos finales
-          npx vite build --base=/$app/
-          cd ../..
+          cd apps/$app && npm install && npx vite build --base=/$app/ && cd ../..
         done
   post_build:
     commands:
-      - echo "Sincronizando carpetas dist con S3..."
       - |
         for app in admin client partner web; do
-          echo "Actualizando archivos en /$app..."
-          # Este comando es el que realmente actualiza tu S3 de forma limpia
           aws s3 sync apps/$app/dist s3://project-r-monorepos-bucket/$app --delete
         done
-      - echo "¡Despliegue completado!"
-
-# AQUÍ ESTÁ EL TRUCO:
-# Dejamos 'files' vacío para que la etapa Deploy de CodePipeline no tenga 
-# nada que subir y así no te cree la carpeta raíz duplicada en el bucket.
 artifacts:
-  files: []
+  files: [] # ESTO EVITA LA DUPLICIDAD DE CARPETAS
