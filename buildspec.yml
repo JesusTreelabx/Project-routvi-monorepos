@@ -3,33 +3,42 @@ version: 0.2
 phases:
   install:
     runtime-versions:
-      nodejs: 20  # Actualizado para evitar los errores de tus logs
+      nodejs: 20
     commands:
       - npm install
   build:
     commands:
       - |
-        # 1. Detectar qué carpetas dentro de 'apps/' tienen cambios
-        # Comparamos el commit actual con el anterior
-        CHANGED_APPS=$(git diff --name-only HEAD~1 HEAD | grep '^apps/' | cut -d/ -f2 | sort -u)
-        
-        if [ -z "$CHANGED_APPS" ]; then
-          echo "No se detectaron cambios en ninguna aplicación de la carpeta /apps. Saltando builds."
+        # 1. Verificar si existe la carpeta .git
+        if [ -d ".git" ]; then
+          echo "Carpeta .git detectada. Identificando cambios..."
+          # Intentamos obtener la diferencia. Si falla (ej. primer commit), procesamos todo.
+          CHANGED_APPS=$(git diff --name-only HEAD~1 HEAD | grep '^apps/' | cut -d/ -f2 | sort -u) || CHANGED_APPS="admin client partner web"
         else
-          echo "Aplicaciones detectadas con cambios: $CHANGED_APPS"
-          for app in $CHANGED_APPS; do
-            if [ -d "apps/$app" ]; then
-              echo "===> Iniciando Build únicamente para: $app"
-              cd apps/$app
-              npm install
-              npx vite build --base=/$app/
-              cd ../..
-              
-              echo "===> Sincronizando $app con S3..."
-              aws s3 sync apps/$app/dist s3://project-r-monorepos-bucket/$app --delete
-            fi
-          done
+          echo "ADVERTENCIA: No se detectó carpeta .git. Procesando todas las apps por seguridad."
+          CHANGED_APPS="admin client partner web"
         fi
 
+        # 2. Si la variable está vacía (cambios fuera de /apps), procesamos todo por si acaso o saltamos
+        if [ -z "$CHANGED_APPS" ]; then
+          echo "No se detectaron cambios específicos en /apps. Procesando todo para asegurar consistencia."
+          CHANGED_APPS="admin client partner web"
+        fi
+
+        echo "Aplicaciones a procesar: $CHANGED_APPS"
+
+        for app in $CHANGED_APPS; do
+          if [ -d "apps/$app" ]; then
+            echo "===> Construyendo: $app"
+            cd apps/$app
+            npm install
+            npx vite build --base=/$app/
+            cd ../..
+            
+            echo "===> Sincronizando $app con S3..."
+            aws s3 sync apps/$app/dist s3://project-r-monorepos-bucket/$app --delete
+          fi
+        done
+
 artifacts:
-  files: [] # Mantenemos esto vacío para evitar la duplicidad de carpetas que corregimos antes
+  files: []
