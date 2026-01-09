@@ -4,24 +4,29 @@ phases:
   install:
     runtime-versions:
       nodejs: 20
-    commands:
-      - npm install
   build:
     commands:
-      - echo "Iniciando build inteligente con Turbo..."
-      # Compara el commit actual contra el anterior para filtrar
-      - npx turbo build --filter=[HEAD^1] || npx turbo build
-  post_build:
-    commands:
       - |
-        echo "Sincronizando con S3 según carpetas generadas..."
-        for app in admin client partner web; do
-          # Solo entra si la carpeta 'dist' existe (significa que esa app cambió)
-          if [ -d "apps/$app/dist" ]; then
-            echo "===> Actualizando S3 para: $app"
-            aws s3 sync apps/$app/dist s3://project-r-monorepos-bucket/$app --delete
+        # 1. Detectar cambios usando Git
+        echo "Analizando cambios en el commit..."
+        CHANGED_FILES=$(git diff --name-only HEAD~1 HEAD)
+        echo "Archivos modificados: $CHANGED_FILES"
+
+        # 2. Definir las apps a revisar
+        APPS=("admin" "client" "partner" "web")
+
+        for app in "${APPS[@]}"; do
+          # Si algún archivo cambiado empieza con "apps/nombre_de_la_app/"
+          if echo "$CHANGED_FILES" | grep -q "^apps/$app/"; then
+            echo "===> CAMBIOS DETECTADOS EN: $app. Iniciando Build..."
+            cd apps/$app
+            npm install
+            npx vite build --base=/$app/
+            
+            echo "===> Sincronizando con S3..."
+            aws s3 sync dist/ s3://project-r-monorepos-bucket/$app --delete
+            cd ../..
+          else
+            echo "===> Sin cambios en $app. Saltando."
           fi
         done
-
-artifacts:
-  files: []
