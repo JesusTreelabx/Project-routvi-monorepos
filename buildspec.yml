@@ -1,21 +1,35 @@
 version: 0.2
+
 phases:
   install:
     runtime-versions:
-      nodejs: 18
+      nodejs: 20  # Actualizado para evitar los errores de tus logs
     commands:
       - npm install
   build:
     commands:
       - |
-        for app in admin client partner web; do
-          cd apps/$app && npm install && npx vite build --base=/$app/ && cd ../..
-        done
-  post_build:
-    commands:
-      - |
-        for app in admin client partner web; do
-          aws s3 sync apps/$app/dist s3://project-r-monorepos-bucket/$app --delete
-        done
+        # 1. Detectar qué carpetas dentro de 'apps/' tienen cambios
+        # Comparamos el commit actual con el anterior
+        CHANGED_APPS=$(git diff --name-only HEAD~1 HEAD | grep '^apps/' | cut -d/ -f2 | sort -u)
+        
+        if [ -z "$CHANGED_APPS" ]; then
+          echo "No se detectaron cambios en ninguna aplicación de la carpeta /apps. Saltando builds."
+        else
+          echo "Aplicaciones detectadas con cambios: $CHANGED_APPS"
+          for app in $CHANGED_APPS; do
+            if [ -d "apps/$app" ]; then
+              echo "===> Iniciando Build únicamente para: $app"
+              cd apps/$app
+              npm install
+              npx vite build --base=/$app/
+              cd ../..
+              
+              echo "===> Sincronizando $app con S3..."
+              aws s3 sync apps/$app/dist s3://project-r-monorepos-bucket/$app --delete
+            fi
+          done
+        fi
+
 artifacts:
-  files: [] # ESTO EVITA LA DUPLICIDAD DE CARPETAS
+  files: [] # Mantenemos esto vacío para evitar la duplicidad de carpetas que corregimos antes
