@@ -1,0 +1,19 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      nodejs: 18
+    commands:
+      - npm install
+  build:
+    commands:
+      - npx turbo run build --filter=partner
+  post_build:
+    commands:
+      - aws s3 sync apps/partner/dist s3://app-partner-bucket-xx --delete
+
+artifacts:
+  files:
+    - 'apps/partner/dist/**/*'
+  discard-paths: yes
