@@ -12,7 +12,7 @@ phases:
       - npx turbo run build --filter=admin
 
 artifacts:
-  base-directory: apps/admin/dist
+  base-directory: 'apps/admin/dist' # Asegúrate de que tenga las comillas simples
   files:
     - '**/*'
   discard-paths: yes
