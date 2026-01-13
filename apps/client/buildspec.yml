@@ -8,13 +8,10 @@ phases:
       - npm install
   build:
     commands:
-      - echo "Construyendo solo la app Client..."
+      - echo "Construyendo la app Client..."
       - npx turbo run build --filter=client
-  post_build:
-    commands:
-      - aws s3 sync apps/client/dist s3://app-client-bucket-xx --delete
 
 artifacts:
+  base-directory: apps/client/dist
   files:
-    - 'apps/client/dist/**/*'
-  discard-paths: yes
+    - '**/*'

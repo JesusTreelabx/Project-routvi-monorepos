@@ -8,12 +8,10 @@ phases:
       - npm install
   build:
     commands:
+      - echo "Construyendo la app Partner..."
       - npx turbo run build --filter=partner
-  post_build:
-    commands:
-      - aws s3 sync apps/partner/dist s3://app-partner-bucket-xx --delete
 
 artifacts:
+  base-directory: apps/partner/dist
   files:
-    - 'apps/partner/dist/**/*'
-  discard-paths: yes
+    - '**/*'

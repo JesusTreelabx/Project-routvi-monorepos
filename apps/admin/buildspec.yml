@@ -10,7 +10,6 @@ phases:
     commands:
       - echo "Construyendo solo la app Admin..."
       - npx turbo run build --filter=admin
-# ELIMINAMOS LA SECCIÓN POST_BUILD QUE TIENE EL AWS S3 SYNC
 
 artifacts:
   base-directory: apps/admin/dist
