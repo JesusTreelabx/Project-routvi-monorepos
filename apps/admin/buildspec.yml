@@ -5,19 +5,14 @@ phases:
     runtime-versions:
       nodejs: 18
     commands:
-      - echo "Instalando dependencias globales del monorepo..."
       - npm install
   build:
     commands:
-      - echo "Construyendo solo la app Admin con Turborepo..."
+      - echo "Construyendo solo la app Admin..."
       - npx turbo run build --filter=admin
-  post_build:
-    commands:
-      - echo "Sincronizando con el Bucket de Admin..."
-      # Importante: La ruta es apps/admin/dist porque Vite construye ahí
-      - aws s3 sync apps/admin/dist s3://app-admin-bucket-xx --delete
+# ELIMINAMOS LA SECCIÓN POST_BUILD QUE TIENE EL AWS S3 SYNC
 
 artifacts:
+  base-directory: apps/admin/dist
   files:
-    - 'apps/admin/dist/**/*'
-  discard-paths: yes
+    - '**/*'
