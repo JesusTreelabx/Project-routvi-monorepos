@@ -8,10 +8,11 @@ phases:
       - npm install
   build:
     commands:
-      - echo "Construyendo la app..."
+      - echo "Construyendo la app Admin..."
       - npx turbo run build --filter=admin
 
 artifacts:
+  base-directory: 'apps/admin/dist' # Asegúrate de que tenga las comillas simples
   files:
     - '**/*'
-  base-directory: 'apps/admin/dist'
+  discard-paths: yes
