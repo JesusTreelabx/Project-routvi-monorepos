@@ -8,10 +8,9 @@ phases:
       - npm install
   build:
     commands:
-      - echo "Construyendo la app Client..."
       - npx turbo run build --filter=client
 
 artifacts:
-  base-directory: apps/client/dist
+  base-directory: 'apps/client/dist'
   files:
     - '**/*'

@@ -8,10 +8,9 @@ phases:
       - npm install
   build:
     commands:
-      - echo "Construyendo la app Partner..."
       - npx turbo run build --filter=partner
 
 artifacts:
-  base-directory: apps/partner/dist
+  base-directory: 'apps/partner/dist'
   files:
     - '**/*'

@@ -8,10 +8,9 @@ phases:
       - npm install
   build:
     commands:
-      - echo "Construyendo la app Web..."
       - npx turbo run build --filter=web
 
 artifacts:
-  base-directory: apps/web/dist
+  base-directory: 'apps/web/dist'
   files:
     - '**/*'
