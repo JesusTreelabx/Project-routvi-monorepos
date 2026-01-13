@@ -8,11 +8,10 @@ phases:
       - npm install
   build:
     commands:
-      - echo "Construyendo la app Admin con Turborepo..."
+      - echo "Construyendo la app..."
       - npx turbo run build --filter=admin
 
 artifacts:
-  # Esta propiedad es la que extrae el contenido y lo pone en la raíz de S3
-  base-directory: apps/admin/dist
   files:
     - '**/*'
+  base-directory: 'apps/admin/dist'
