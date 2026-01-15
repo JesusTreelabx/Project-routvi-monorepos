@@ -1,0 +1,17 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      nodejs: 20
+    commands:
+      - npm install
+  build:
+    commands:
+      # Usamos el filtro de turbo para construir solo esta app
+      - npx turbo run build --filter=commerce
+
+artifacts:
+  base-directory: 'apps/commerce/out'
+  files:
+    - '**/*'
