@@ -8,10 +8,17 @@ phases:
       - npm install
   build:
     commands:
-      # Usamos el filtro de turbo para construir solo esta app
-      - npx turbo run build --filter=commerce
+      - npx turbo run build --filter=commerce # O el filtro que corresponda
 
 artifacts:
   base-directory: 'apps/commerce/out'
   files:
-    - '**/*'
+    - '**/*.html'
+    - '**/*.js'
+    - '**/*.css'
+    - '**/*.json'
+    - '**/*.svg'
+    - '**/*.ico'
+    - '**/*.png'
+    - '**/*.jpg'
+    - '_next/**/*'

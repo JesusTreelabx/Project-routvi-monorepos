@@ -8,9 +8,19 @@ phases:
       - npm install
   build:
     commands:
+      # Construcción específica para la app de RH usando Turborepo
       - npx turbo run build --filter=rh
 
 artifacts:
+  # Next.js genera la exportación estática en la carpeta 'out'
   base-directory: 'apps/rh/out'
   files:
-    - '**/*'
+    - '**/*.html'
+    - '**/*.js'
+    - '**/*.css'
+    - '**/*.json'
+    - '**/*.svg'
+    - '**/*.ico'
+    - '**/*.png'
+    - '**/*.jpg'
+    - '_next/**/*'
