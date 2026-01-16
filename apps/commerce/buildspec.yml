@@ -8,7 +8,7 @@ phases:
       - npm install
   build:
     commands:
-      - npx turbo run build --filter=commerce # O el filtro que corresponda
+      - npx turbo run build --filter=commerce 
 
 artifacts:
   base-directory: 'apps/commerce/out'
