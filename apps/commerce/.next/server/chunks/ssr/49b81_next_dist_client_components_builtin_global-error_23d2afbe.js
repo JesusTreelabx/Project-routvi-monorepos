@@ -1,0 +1,3 @@
+module.exports=[41558,(a,b,c)=>{let{createClientModuleProxy:d}=a.r(43585);a.n(d("[project]/Documents/Repos-Github/Project-routvi-monorepos/node_modules/next/dist/client/components/builtin/global-error.js <module evaluation>"))},2074,(a,b,c)=>{let{createClientModuleProxy:d}=a.r(43585);a.n(d("[project]/Documents/Repos-Github/Project-routvi-monorepos/node_modules/next/dist/client/components/builtin/global-error.js"))},87462,a=>{"use strict";a.i(41558);var b=a.i(2074);a.n(b)}];
+
+//# sourceMappingURL=49b81_next_dist_client_components_builtin_global-error_23d2afbe.js.map

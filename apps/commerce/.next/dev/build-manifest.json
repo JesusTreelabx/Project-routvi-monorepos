@@ -1,0 +1,25 @@
+{
+  "pages": {
+    "/_app": []
+  },
+  "devFiles": [],
+  "polyfillFiles": [
+    "static/chunks/49b81_next_dist_build_polyfills_polyfill-nomodule.js"
+  ],
+  "lowPriorityFiles": [
+    "static/development/_ssgManifest.js",
+    "static/development/_buildManifest.js"
+  ],
+  "rootMainFiles": [
+    "static/chunks/[turbopack]_browser_dev_hmr-client_hmr-client_ts_10d64340._.js",
+    "static/chunks/49b81_next_dist_compiled_react-dom_a9db5e37._.js",
+    "static/chunks/49b81_next_dist_compiled_react-server-dom-turbopack_3d4f52ab._.js",
+    "static/chunks/49b81_next_dist_compiled_next-devtools_index_37cd5c91.js",
+    "static/chunks/49b81_next_dist_compiled_ad541990._.js",
+    "static/chunks/49b81_next_dist_client_e961a95a._.js",
+    "static/chunks/49b81_next_dist_9cb59844._.js",
+    "static/chunks/85ec5_@swc_helpers_cjs_9aae3493._.js",
+    "static/chunks/Documents_Repos-Github_Project-routvi-monorepos_apps_commerce_a0ff3932._.js",
+    "static/chunks/turbopack-Documents_Repos-Github_Project-routvi-monorepos_apps_commerce_f36a92f1._.js"
+  ]
+}

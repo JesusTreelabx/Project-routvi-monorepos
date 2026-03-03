@@ -1,0 +1,11 @@
+var R=require("../../chunks/ssr/[turbopack]_runtime.js")("server/app/_global-error/page.js")
+R.c("server/chunks/ssr/[root-of-the-server]__c8475716._.js")
+R.c("server/chunks/ssr/Documents_Repos-Github_Project-routvi-monorepos_0668c68e._.js")
+R.c("server/chunks/ssr/49b81_next_dist_36c4d268._.js")
+R.c("server/chunks/ssr/[root-of-the-server]__ce58b134._.js")
+R.c("server/chunks/ssr/[root-of-the-server]__694eed33._.js")
+R.c("server/chunks/ssr/49b81_next_dist_5a3e142b._.js")
+R.c("server/chunks/ssr/Documents_Repos-Github_Project-routvi-monorepos_apps_commerce_app_727425b0._.js")
+R.c("server/chunks/ssr/56d73_apps_commerce__next-internal_server_app__global-error_page_actions_31def3b9.js")
+R.m(26738)
+module.exports=R.m(26738).exports
